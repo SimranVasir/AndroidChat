@@ -1,10 +1,15 @@
 package com.firebase.androidchat;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -17,14 +22,17 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import android.provider.Settings.Secure;
+
 import java.util.Date;
 import java.util.Random;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends AppCompatActivity {
 
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://glowing-fire-3935.firebaseio.com/";
 
+    private Context mContext;
     private String mUsername;
     private Firebase mFirebaseRef;
     private ValueEventListener mConnectedListener;
@@ -34,6 +42,8 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = this;
 
         // Make sure we have a mUsername
         setupUsername();
@@ -68,7 +78,7 @@ public class MainActivity extends ListActivity {
     public void onStart() {
         super.onStart();
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
-        final ListView listView = getListView();
+        final ListView listView = (ListView) findViewById(R.id.chat_list);
         // Tell our list adapter that we only want 50 messages at a time
         mChatListAdapter = new ChatListAdapter(mFirebaseRef.limit(50), this, R.layout.chat_message, mUsername);
         listView.setAdapter(mChatListAdapter);
@@ -106,13 +116,33 @@ public class MainActivity extends ListActivity {
         mChatListAdapter.cleanup();
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Toast.makeText(mContext, "Nothing yet", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
     private void setupUsername() {
         SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
         mUsername = prefs.getString("username", null);
         if (mUsername == null) {
             Random r = new Random();
             // Assign a random user name if we don't have one saved.
-            mUsername = "JavaUser" + r.nextInt(100000);
+//            mUsername = "JavaUser" + r.nextInt(100000);
+            mUsername = Secure.getString(mContext.getContentResolver(), Secure.ANDROID_ID);
             prefs.edit().putString("username", mUsername).commit();
         }
     }
@@ -121,17 +151,11 @@ public class MainActivity extends ListActivity {
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         String input = inputText.getText().toString();
         if (!input.equals("")) {
-
-            if (input.startsWith("rename:")) {
-                mUsername = input.substring("rename:".length());
-                inputText.setText("");
-            } else {
-                // Create our 'model', a Chat object
-                Chat chat = new Chat(input, mUsername, new Date().getTime());
-                // Create a new, auto-generated child of that chat location, and save our chat data there
-                mFirebaseRef.push().setValue(chat);
-                inputText.setText("");
-            }
+            // Create our 'model', a Chat object
+            Chat chat = new Chat(input, mUsername, new Date().getTime());
+            // Create a new, auto-generated child of that chat location, and save our chat data there
+            mFirebaseRef.push().setValue(chat);
+            inputText.setText("");
         }
     }
 }
