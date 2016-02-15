@@ -1,0 +1,7 @@
+C:\Users\oskar\workspace\AndroidChat-master\app\build\intermediates\classes\debug
+C:\Users\oskar\workspace\AndroidChat-master\app\build\intermediates\pre-dexed\debug\firebase-client-android-2.0.3-eb6bb1c3767a4a547445c60ceb7e9617e6a8775b.jar
+C:\Users\oskar\workspace\AndroidChat-master\app\build\intermediates\pre-dexed\debug\jackson-annotations-2.2.2-e0dcfa1c2a52d743042e680788a8442243723507.jar
+C:\Users\oskar\workspace\AndroidChat-master\app\build\intermediates\pre-dexed\debug\tubesock-0.0.10-2c3a783631beb58839aaabc31857c3c56bce4dc5.jar
+C:\Users\oskar\workspace\AndroidChat-master\app\build\intermediates\pre-dexed\debug\jackson-core-2.2.2-e899b4cf81cb7fd9bf66e4f0b637cfb98d00acb9.jar
+C:\Users\oskar\workspace\AndroidChat-master\app\build\intermediates\pre-dexed\debug\firebase-client-jvm-2.0.3-88bcf6fe493bdf28ab189c26ed2297e2da007856.jar
+C:\Users\oskar\workspace\AndroidChat-master\app\build\intermediates\pre-dexed\debug\jackson-databind-2.2.2-edb8a0f75517f6919d3f647ad80dc28337193780.jar
