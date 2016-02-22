@@ -1,9 +1,5 @@
 package com.firebase.androidchat;
 
-/**
- * @author greg
- * @since 6/21/13
- */
 public class Chat {
 
     private String message;
