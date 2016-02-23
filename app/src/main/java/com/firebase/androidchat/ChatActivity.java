@@ -29,6 +29,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private Context mContext;
     private Firebase mFirebaseRef;
+    private String participant1;
+    private String participant2;
     private String mUsername;
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
@@ -41,6 +43,10 @@ public class ChatActivity extends AppCompatActivity {
         mContext = this;
 
         mUsername = getApplication().getSharedPreferences("ChatPrefs", 0).getString("username", null);
+
+        // Get the messages from the intent
+        participant1 = getIntent().getStringExtra("participant1");
+        participant2 = getIntent().getStringExtra("participant2");
 
         // Setup our Firebase mFirebaseRef
         mFirebaseRef = new Firebase(FIREBASE_URL).child("chat");
@@ -132,7 +138,12 @@ public class ChatActivity extends AppCompatActivity {
         String input = inputText.getText().toString();
         if (!input.equals("")) {
             // Create our 'model', a Chat object
-            Chat chat = new Chat(input, mUsername, new Date().getTime());
+            Chat chat;
+            if (mUsername.equalsIgnoreCase(participant1)) {
+                chat = new Chat(input, mUsername, participant2, new Date().getTime());
+            } else {
+                chat = new Chat(input, mUsername, participant1, new Date().getTime());
+            }
             // Create a new, auto-generated child of that chat location, and save our chat data there
             mFirebaseRef.push().setValue(chat);
             inputText.setText("");
