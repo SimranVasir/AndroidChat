@@ -1,6 +1,7 @@
 package com.firebase.androidchat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -54,6 +57,16 @@ public class MainActivity extends AppCompatActivity {
         // Tell our list adapter that we only want 50 messages at a time
         mConversationListAdapter = new ConversationListAdapter(mFirebaseRef.limit(50), this, android.R.layout.simple_list_item_2, mUsername);
         listView.setAdapter(mConversationListAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.putExtra("participant1", ((Conversation) mConversationListAdapter.getItem(position)).getParticipant1());
+                intent.putExtra("participant2", ((Conversation) mConversationListAdapter.getItem(position)).getParticipant2());
+                startActivity(intent);
+            }
+        });
         mConversationListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
